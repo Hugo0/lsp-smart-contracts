@@ -9,12 +9,12 @@ contract OwnableClaim is OwnableUnset {
         InProgress
     }
 
-    Stage internal _ownershipTransfer;
+    Stage public ownershipTransfer;
 
     address public upcomingNewOwner;
 
     modifier atStage(Stage _stage, string memory errorMessage) {
-        require(_ownershipTransfer == _stage, errorMessage);
+        require(ownershipTransfer == _stage, errorMessage);
         _;
     }
 
@@ -32,7 +32,7 @@ contract OwnableClaim is OwnableUnset {
         // @todo if the timelock / timeout has expired, should reset the process
 
         // start ownership transfer process
-        _ownershipTransfer = Stage.InProgress;
+        ownershipTransfer = Stage.InProgress;
 
         upcomingNewOwner = newOwner;
     }

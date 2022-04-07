@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import "../UniversalProfile.sol";
 import "../Utils/OwnableClaim.sol";
 
-contract UniversalProfileSafe is UniversalProfile, OwnableClaim {
+contract UniversalProfileClaimedOwner is UniversalProfile, OwnableClaim {
     constructor(address _newOwner) UniversalProfile(_newOwner) {}
 
     function transferOwnership(address _newOwner)

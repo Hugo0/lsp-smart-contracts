@@ -1,16 +1,19 @@
 import { ethers } from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
-import { UniversalProfileSafe, UniversalProfileSafe__factory } from "../types";
+import {
+  UniversalProfileClaimedOwner,
+  UniversalProfileClaimedOwner__factory,
+} from "../types";
 import { INTERFACE_IDS } from "../constants";
 import { isContext } from "vm";
 
-describe("UniversalProfileSafe", () => {
+describe("UniversalProfileClaimedOwner", () => {
   let owner: SignerWithAddress,
     nonOwner: SignerWithAddress,
     newOwner: SignerWithAddress;
   let accounts: SignerWithAddress[];
-  let universalProfile: UniversalProfileSafe;
+  let universalProfile: UniversalProfileClaimedOwner;
 
   beforeAll(async () => {
     accounts = await ethers.getSigners();
@@ -21,7 +24,7 @@ describe("UniversalProfileSafe", () => {
 
   describe("transferOwnership(...)", () => {
     beforeEach(async () => {
-      universalProfile = await new UniversalProfileSafe__factory(
+      universalProfile = await new UniversalProfileClaimedOwner__factory(
         accounts[0]
       ).deploy(owner.address);
     });
@@ -38,7 +41,7 @@ describe("UniversalProfileSafe", () => {
 
   describe("ownership transfer process", () => {
     beforeEach(async () => {
-      universalProfile = await new UniversalProfileSafe__factory(
+      universalProfile = await new UniversalProfileClaimedOwner__factory(
         accounts[0]
       ).deploy(owner.address);
     });
@@ -49,12 +52,12 @@ describe("UniversalProfileSafe", () => {
     // also test that it still not possible to start a ownership transfer process with the
     // address zero, and that the ownership process should remain unstarted (= false)
     it("should start a ownership transfer process", async () => {
-      let processBefore = await universalProfile.isTransferringOwnership();
+      let processBefore = await universalProfile.ownershipTransfer();
       expect(processBefore).toBeFalsy();
 
       await universalProfile.connect(owner).transferOwnership(newOwner.address);
 
-      let processAfter = await universalProfile.isTransferringOwnership();
+      let processAfter = await universalProfile.ownershipTransfer();
       expect(processAfter).toBeTruthy();
     });
 
