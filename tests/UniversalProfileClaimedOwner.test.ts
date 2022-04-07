@@ -46,6 +46,26 @@ describe("UniversalProfileClaimedOwner", () => {
       ).deploy(owner.address);
     });
 
+    describe("before ownership transfer", () => {
+      it("nobody should be allowed to claim ownership", async () => {
+        await universalProfile
+          .connect(owner)
+          .transferOwnership(newOwner.address);
+
+        const randomEOA = accounts[8];
+
+        await expect(
+          universalProfile.connect(randomEOA).claimOwnership()
+        ).toBeRevertedWith("not allowed to claim ownership");
+      });
+    });
+
+    describe("when transfering ownership", () => {
+      it("should revert if transferring ownership to address zero", async () => {
+        await expect(universalProfile.connect(owner));
+      });
+    });
+
     // before starting a ownership transfer process, nobody should be allowed to claimOwnership()
     // how about if at the very beginning, it is the address zero?
 
